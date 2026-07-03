@@ -1,0 +1,10 @@
+package com.example.core.data.dto.register
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class RegisterRequest(
+    val email: String,
+    val username: String,
+    val password: String
+)
