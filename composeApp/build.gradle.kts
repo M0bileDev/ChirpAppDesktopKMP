@@ -38,5 +38,23 @@ kotlin {
             implementation(libs.jetbrains.compose.viewmodel)
             implementation(libs.jetbrains.lifecycle.compose)
         }
+
+        desktopMain.dependencies{
+            implementation(projects.core.presentation)
+            implementation(compose.desktop.currentOs)
+            // swing -> ui framework build on awt (Abstract Window Toolkit)
+            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.kotlin.stdlib)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.jsystemthemedetector)
+        }
+    }
+}
+
+// Desktop entry point configuration -> main function
+compose.desktop {
+    application{
+        mainClass = "com.example.chirpappkmp.MainKt"
     }
 }
