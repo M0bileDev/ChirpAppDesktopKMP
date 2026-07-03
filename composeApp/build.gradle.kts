@@ -40,3 +40,10 @@ kotlin {
         }
     }
 }
+
+// Desktop entry point configuration -> main function
+compose.desktop {
+    application{
+        mainClass = "com.example.chirpappkmp.MainKt"
+    }
+}
