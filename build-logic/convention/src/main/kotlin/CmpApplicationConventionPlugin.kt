@@ -1,4 +1,5 @@
 import com.example.chirpappkmp.convention.configureAndroidTarget
+import com.example.chirpappkmp.convention.configureDesktopTarget
 import com.example.chirpappkmp.convention.configureIosTargets
 import com.example.chirpappkmp.convention.libs
 import org.gradle.api.Plugin
@@ -21,6 +22,7 @@ class CmpApplicationConventionPlugin : Plugin<Project> {
 
             configureAndroidTarget()
             configureIosTargets()
+            configureDesktopTarget()
 
             dependencies {
                 "debugImplementation"(libs.findLibrary("androidx-compose-ui-tooling").get())
