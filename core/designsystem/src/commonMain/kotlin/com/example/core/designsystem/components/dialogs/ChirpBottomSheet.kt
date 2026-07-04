@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.core.designsystem.theme.ChirpTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -40,7 +41,7 @@ fun ChirpBottomSheet(
         modifier = modifier.statusBarsPadding(),
         onDismissRequest = onDismiss,
         dragHandle = null,
-        contentWindowInsets = { WindowInsets() }
+        contentWindowInsets = { WindowInsets(left = 0.dp) }
     ) {
         content()
     }
