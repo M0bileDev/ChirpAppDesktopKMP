@@ -14,6 +14,8 @@ internal fun Project.configureKotlinMultiplatform(){
 
     //library and application module
     configureAndroidTarget()
+    // enable desktopMain target for other modules
+    configureDesktopTarget()
 
     extensions.configure<KotlinMultiplatformExtension>{
         listOf(
