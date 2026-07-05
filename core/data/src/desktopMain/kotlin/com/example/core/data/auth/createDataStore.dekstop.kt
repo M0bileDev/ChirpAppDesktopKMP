@@ -2,14 +2,15 @@ package com.example.core.data.auth
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.example.core.data.auth.DesktopDataStore.APP_DATA
-import com.example.core.data.auth.DesktopDataStore.APP_FOLDER_NAME
-import com.example.core.data.auth.DesktopDataStore.HOME_DIRECTORY
-import com.example.core.data.auth.DesktopDataStore.LINUX_APPLICATIONS_DIRECTORY
-import com.example.core.data.auth.DesktopDataStore.MAC_APPLICATIONS_DIRECTORY
 import com.example.core.data.util.DesktopOS
 import com.example.core.data.util.currentOS
 import java.io.File
+
+const val APP_FOLDER_NAME = "Chirp"
+const val HOME_DIRECTORY = "user.home"
+const val APP_DATA = "APPDATA"
+const val MAC_APPLICATIONS_DIRECTORY = "Library/Application Support/"
+const val LINUX_APPLICATIONS_DIRECTORY = ".local/share/"
 
 fun createDataStore(): DataStore<Preferences> = createDataStore {
     val userHomeDirectory = System.getProperty(HOME_DIRECTORY)
@@ -29,12 +30,4 @@ fun createDataStore(): DataStore<Preferences> = createDataStore {
     }
 
     File(applicationDirectory, DATA_STORE_FILE_NAME).absolutePath
-}
-
-object DesktopDataStore {
-    const val APP_FOLDER_NAME = "Chirp"
-    const val HOME_DIRECTORY = "user.home"
-    const val APP_DATA = "APPDATA"
-    const val MAC_APPLICATIONS_DIRECTORY = "Library/Application Support/"
-    const val LINUX_APPLICATIONS_DIRECTORY = ".local/share/"
 }
