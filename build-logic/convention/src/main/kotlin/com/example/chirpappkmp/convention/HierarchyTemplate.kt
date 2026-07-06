@@ -3,6 +3,7 @@
 package com.example.chirpappkmp.convention
 
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinHierarchyTemplate
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
@@ -56,4 +57,8 @@ private val hierarchyTemplate = KotlinHierarchyTemplate {
             }
         }
     }
+}
+
+fun KotlinMultiplatformExtension.applyHierarchyTemplate() {
+    applyHierarchyTemplate(hierarchyTemplate)
 }
