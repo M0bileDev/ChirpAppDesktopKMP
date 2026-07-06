@@ -1,10 +1,13 @@
+import com.example.chirpappkmp.convention.applyHierarchyTemplate
 import com.example.chirpappkmp.convention.configureAndroidTarget
 import com.example.chirpappkmp.convention.configureDesktopTarget
 import com.example.chirpappkmp.convention.configureIosTargets
 import com.example.chirpappkmp.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class CmpApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -23,6 +26,10 @@ class CmpApplicationConventionPlugin : Plugin<Project> {
             configureAndroidTarget()
             configureIosTargets()
             configureDesktopTarget()
+
+            extensions.configure<KotlinMultiplatformExtension>(){
+                applyHierarchyTemplate()
+            }
 
             dependencies {
                 "debugImplementation"(libs.findLibrary("androidx-compose-ui-tooling").get())
