@@ -28,6 +28,8 @@ internal fun Project.configureKotlinMultiplatform(){
             }
         }
 
+        applyHierarchyTemplate()
+
         //additional flags to the compiler
         compilerOptions {
             //suppresses warnings when using expect/actual class declarations in KMP
