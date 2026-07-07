@@ -1,18 +1,29 @@
 package com.example.feature.chat.data.network
 
+import com.example.core.domain.logging.ChirpLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.net.InetSocketAddress
 import java.net.NetworkInterface
 import java.net.Socket
+import kotlin.time.Duration.Companion.seconds
 
-actual class ConnectivityObserver {
-    actual val isConnected: Flow<Boolean>
-        get() = flowOf(true)
+actual class ConnectivityObserver(
+    private val chirpLogger: ChirpLogger
+) {
+    actual val isConnected: Flow<Boolean> = flow {
+        while (true) {
+            val connected = isConnected()
+            chirpLogger.info("Desktop connectivity status: $connected")
+            emit(connected)
+            delay(5.seconds)
+        }
+    }
 
     // check if device support hardware network interface like Wi-Fi
     private suspend fun isConnected(): Boolean {
