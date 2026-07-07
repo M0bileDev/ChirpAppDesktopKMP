@@ -15,5 +15,14 @@ enum class ImageExtension {
     PNG,
     JPEG,
     JPG,
-    WEBP
+    WEBP;
+
+    fun getMimeTypeFromFileName(filename: String): String? {
+        val extension = filename.substringAfterLast(".", "").lowercase()
+        val imageExtension = ImageExtension.entries.firstOrNull { it.name.lowercase() == extension }
+
+        return imageExtension?.let { extension ->
+            "image/$extension"
+        }
+    }
 }
