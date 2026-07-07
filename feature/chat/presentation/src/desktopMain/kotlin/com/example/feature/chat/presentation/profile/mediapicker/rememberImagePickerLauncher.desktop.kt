@@ -10,3 +10,10 @@ actual fun rememberImagePicker(onResult: (PickedImageData) -> Unit): ImagePicker
         )
     }
 }
+
+enum class ImageExtension {
+    PNG,
+    JPEG,
+    JPG,
+    WEBP
+}
