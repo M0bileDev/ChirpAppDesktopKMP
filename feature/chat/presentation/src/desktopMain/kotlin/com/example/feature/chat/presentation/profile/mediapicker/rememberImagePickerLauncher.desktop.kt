@@ -1,6 +1,10 @@
 package com.example.feature.chat.presentation.profile.mediapicker
 
 import androidx.compose.runtime.remember
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.nio.file.Files
 
@@ -20,16 +24,17 @@ enum class ImageExtension {
     WEBP
 }
 
-fun getMimeTypeFromFileName(filename: String): String? {
-    val extension = filename.substringAfterLast(".", "").lowercase()
-    val imageExtension = ImageExtension.entries.firstOrNull { it.name.lowercase() == extension }
 
-    return imageExtension?.let { extension ->
-        "image/$extension"
+private suspend fun File.suspendToPickedImage() = withContext(Dispatchers.IO) {
+    return@withContext try {
+        toPickedImageData()
+    } catch (_: Exception) {
+        currentCoroutineContext().ensureActive()
+        null
     }
 }
 
-fun File.toPickedImageData(): PickedImageData {
+private fun File.toPickedImageData(): PickedImageData {
     val mimeType = getMimeTypeFromFileName(filename = name)
     val bytes = Files.readAllBytes(toPath())
 
@@ -37,4 +42,13 @@ fun File.toPickedImageData(): PickedImageData {
         bytes = bytes,
         mimeType = mimeType
     )
+}
+
+private fun getMimeTypeFromFileName(filename: String): String? {
+    val extension = filename.substringAfterLast(".", "").lowercase()
+    val imageExtension = ImageExtension.entries.firstOrNull { it.name.lowercase() == extension }
+
+    return imageExtension?.let { extension ->
+        "image/$extension"
+    }
 }
