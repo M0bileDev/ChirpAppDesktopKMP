@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 import java.net.InetSocketAddress
 import java.net.NetworkInterface
+import java.net.Socket
 
 actual class ConnectivityObserver {
     actual val isConnected: Flow<Boolean>
@@ -34,11 +35,25 @@ actual class ConnectivityObserver {
         false
     }
 
+    private suspend fun ping(target: InetSocketAddress): Boolean = withContext(Dispatchers.IO) {
+        try {
+            Socket().use {
+                it.soTimeout = SOCKET_TIMEOUT
+                it.connect(target)
+                true
+            }
+        } catch (_: Exception) {
+            currentCoroutineContext().ensureActive()
+            false
+        }
+    }
+
     companion object {
         const val GOOGLE_DNS = "8.8.8.8"
         const val CLAUD_FLARE_DNS = "1.1.1.1"
         const val OPEN_DNS_DNS = "208.67.222.222"
         const val STANDARD_DNS_PORT = 53
+        const val SOCKET_TIMEOUT = 3_000
 
         private val connectivityTargets = listOf(
             InetSocketAddress(GOOGLE_DNS, STANDARD_DNS_PORT),
