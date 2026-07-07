@@ -1,12 +1,38 @@
 package com.example.feature.chat.data.network
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.withContext
 import java.net.InetSocketAddress
+import java.net.NetworkInterface
 
 actual class ConnectivityObserver {
     actual val isConnected: Flow<Boolean>
         get() = flowOf(true)
+
+    private suspend fun checkAnyValidNetworkInterface(): Boolean = try {
+        withContext(Dispatchers.IO) {
+            NetworkInterface
+                // hardware interfaces
+                .getNetworkInterfaces()
+        }
+            .asSequence()
+            .any { networkInterface ->
+                // not localhost
+                !networkInterface.isLoopback
+                        // is enabled
+                        && networkInterface.isUp
+                        // an instance of an InetAddress consists of an IP address
+                        // and possibly its corresponding host name
+                        && networkInterface.inetAddresses.hasMoreElements()
+            }
+    } catch (_: Exception) {
+        currentCoroutineContext().ensureActive()
+        false
+    }
 
     companion object {
         const val GOOGLE_DNS = "8.8.8.8"
