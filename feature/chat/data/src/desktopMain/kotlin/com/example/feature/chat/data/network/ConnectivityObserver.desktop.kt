@@ -14,6 +14,17 @@ actual class ConnectivityObserver {
     actual val isConnected: Flow<Boolean>
         get() = flowOf(true)
 
+    // check if device support hardware network interface like Wi-Fi
+    private suspend fun isConnected(): Boolean {
+        val validInterface = checkAnyValidNetworkInterface()
+
+        if (!validInterface) return false
+
+        return connectivityTargets.any { target ->
+            ping(target)
+        }
+    }
+
     private suspend fun checkAnyValidNetworkInterface(): Boolean = try {
         withContext(Dispatchers.IO) {
             NetworkInterface
