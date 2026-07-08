@@ -3,6 +3,7 @@
 package com.example.feature.chat.presentation.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -60,6 +61,7 @@ import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.core.presentation.util.UiText
 import com.example.core.presentation.util.clearFocusOnTap
+import com.example.feature.chat.presentation.profile.components.DragAndDropOverlay
 import com.example.feature.chat.presentation.profile.components.ProfileHeaderSection
 import com.example.feature.chat.presentation.profile.components.ProfileSectionLayout
 import com.example.feature.chat.presentation.profile.mediapicker.rememberDragAndDropTarget
@@ -131,6 +133,10 @@ fun ProfileScreen(
                 shape = RoundedCornerShape(16.dp)
             )
             .verticalScroll(rememberScrollState())
+            .dragAndDropTarget(
+                shouldStartDragAndDrop = { true },
+                target = dragAndDropTarget
+            )
     ) {
         ProfileHeaderSection(
             modifier = Modifier
@@ -267,6 +273,10 @@ fun ProfileScreen(
                 )
             }
         }
+    }
+
+    if (isHoveringFile) {
+        DragAndDropOverlay()
     }
 
     if (showDeleteImageConfirmationDialog) {
