@@ -7,7 +7,7 @@ import androidx.compose.ui.draganddrop.DragAndDropTarget
 @androidx.compose.runtime.Composable
 actual fun rememberDragAndDropTarget(
     onHover: (Boolean) -> Unit,
-    onDrop: (ByteArray) -> Unit
+    onDrop: (PickedImageData) -> Unit
 ): DragAndDropTarget {
     return remember {
         object : DragAndDropTarget {
