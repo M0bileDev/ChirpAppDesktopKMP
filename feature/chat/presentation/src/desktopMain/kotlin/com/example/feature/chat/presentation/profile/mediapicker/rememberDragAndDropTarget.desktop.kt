@@ -8,6 +8,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
+import com.example.feature.chat.presentation.profile.mediapicker.ext.getMimeTypeFromFileName
 import com.example.feature.chat.presentation.profile.mediapicker.ext.hasValidImageExtension
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ import java.io.File
 @Composable
 actual fun rememberDragAndDropTarget(
     onHover: (Boolean) -> Unit,
-    onDrop: (ByteArray) -> Unit
+    onDrop: (PickedImageData) -> Unit
 ): DragAndDropTarget {
     val scope = rememberCoroutineScope()
 
@@ -45,7 +46,13 @@ actual fun rememberDragAndDropTarget(
 
                 if (hasValidExtension) {
                     scope.launch(Dispatchers.IO) {
-                        onDrop(file.readBytes())
+                        val mimeType = file.name.getMimeTypeFromFileName()
+                        val data = PickedImageData(
+                            bytes = file.readBytes(),
+                            mimeType = mimeType
+                        )
+
+                        onDrop(data)
                     }
                     return true
                 }
