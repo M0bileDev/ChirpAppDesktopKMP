@@ -85,6 +85,6 @@ private fun getMimeTypeFromFileName(filename: String): String? {
     val imageExtension = ImageExtension.entries.firstOrNull { it.name.lowercase() == extension }
 
     return imageExtension?.let { extension ->
-        "image/$extension"
+        "image/${extension.name.lowercase()}"
     }
 }
