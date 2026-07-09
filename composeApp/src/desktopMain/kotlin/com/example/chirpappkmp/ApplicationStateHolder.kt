@@ -1,10 +1,12 @@
 package com.example.chirpappkmp
 
+import com.example.chirpappkmp.windows.WindowState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 class ApplicationStateHolder(
     private val applicationScope: CoroutineScope
@@ -17,4 +19,12 @@ class ApplicationStateHolder(
             SharingStarted.Lazily,
             ApplicationState()
         )
+
+    fun onAddWindowClick() {
+        _state.update {
+            it.copy(
+                windows = it.windows + WindowState()
+            )
+        }
+    }
 }
