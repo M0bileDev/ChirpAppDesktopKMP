@@ -27,4 +27,12 @@ class ApplicationStateHolder(
             )
         }
     }
+
+    fun onRemoveWindowClick(id: String) {
+        _state.update {
+            it.copy(
+                windows = it.windows.filter { window -> window.id != id }
+            )
+        }
+    }
 }
