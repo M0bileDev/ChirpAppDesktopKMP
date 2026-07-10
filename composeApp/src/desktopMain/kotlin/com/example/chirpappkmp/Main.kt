@@ -1,5 +1,6 @@
 package com.example.chirpappkmp
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -19,6 +20,12 @@ fun main() {
         val applicationStateHolder = koinInject<ApplicationStateHolder>()
         val applicationState by applicationStateHolder.state.collectAsState()
         val windows = applicationState.windows
+
+        LaunchedEffect(windows) {
+            if (windows.isEmpty()) {
+                exitApplication()
+            }
+        }
 
         for (window in windows) {
             key(window.id) {
