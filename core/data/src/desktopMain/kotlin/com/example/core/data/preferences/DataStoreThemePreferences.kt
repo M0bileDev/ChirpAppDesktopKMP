@@ -2,6 +2,7 @@ package com.example.core.data.preferences
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.core.domain.preferences.ThemePreference
 import com.example.core.domain.preferences.ThemePreferences
@@ -30,7 +31,10 @@ class DataStoreThemePreferences(
     }
 
     override suspend fun updateThemePreference(theme: ThemePreference) {
-        TODO("Not yet implemented")
+        dataStore.edit { preferences ->
+            preferences[themePreferenceKey] = theme.name
+        }
     }
+
 
 }
