@@ -2,6 +2,7 @@ package com.example.chirpappkmp
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.window.application
 import com.example.chirpappkmp.di.desktopModule
 import com.example.chirpappkmp.di.initKoin
@@ -20,13 +21,15 @@ fun main() {
         val windows = applicationState.windows
 
         for (window in windows) {
-            ChirpWindow(
-                onCloseRequest = {
-                    applicationStateHolder.onRemoveWindowClick(window.id)
-                },
-                onAddWindowClick = applicationStateHolder::onAddWindowClick,
-                onFocusChanged = {}
-            )
+            key(window.id) {
+                ChirpWindow(
+                    onCloseRequest = {
+                        applicationStateHolder.onRemoveWindowClick(window.id)
+                    },
+                    onAddWindowClick = applicationStateHolder::onAddWindowClick,
+                    onFocusChanged = {}
+                )
+            }
         }
     }
 }
