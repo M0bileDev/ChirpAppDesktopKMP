@@ -49,9 +49,7 @@ fun ChirpWindow(
                         ctrl = true,
                         shift = true
                     ),
-                    onClick = {
-                        info("New window - menu item clicked.")
-                    }
+                    onClick = onAddWindowClick
                 )
             }
         }
