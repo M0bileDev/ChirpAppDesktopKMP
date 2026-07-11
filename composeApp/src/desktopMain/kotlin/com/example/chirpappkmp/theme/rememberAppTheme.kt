@@ -41,7 +41,5 @@ fun rememberAppTheme(
         ThemePreference.SYSTEM -> isSystemThemeDark
     }
 
-    return remember {
-        if (isDarkTheme) AppTheme.DARK else AppTheme.LIGHT
-    }
+    return if (isDarkTheme) AppTheme.DARK else AppTheme.LIGHT
 }
