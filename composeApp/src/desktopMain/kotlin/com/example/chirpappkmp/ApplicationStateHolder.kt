@@ -1,6 +1,7 @@
 package com.example.chirpappkmp
 
 import com.example.chirpappkmp.windows.WindowState
+import com.example.core.domain.preferences.ThemePreference
 import com.example.core.domain.preferences.ThemePreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ApplicationStateHolder(
     private val applicationScope: CoroutineScope,
@@ -25,6 +27,12 @@ class ApplicationStateHolder(
             SharingStarted.Lazily,
             ApplicationState()
         )
+
+    fun onThemePreferenceClick(themePreference: ThemePreference) {
+        applicationScope.launch {
+            themePreferences.updateThemePreference(theme = themePreference)
+        }
+    }
 
     fun observeThemePreference() {
         themePreferences
