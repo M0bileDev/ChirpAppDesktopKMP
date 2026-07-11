@@ -14,12 +14,13 @@ import chirpappkmp.composeapp.generated.resources.file
 import chirpappkmp.composeapp.generated.resources.logo
 import chirpappkmp.composeapp.generated.resources.new_window
 import com.example.chirpappkmp.App
-import com.example.core.data.logging.KermitLogger.info
+import com.example.chirpappkmp.theme.AppTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ChirpWindow(
+    appTheme: AppTheme,
     onCloseRequest: () -> Unit,
     onAddWindowClick: () -> Unit,
     onFocusChanged: (Boolean) -> Unit,
@@ -53,6 +54,9 @@ fun ChirpWindow(
                 )
             }
         }
-        App()
+
+        App(
+            isDarkTheme = appTheme == AppTheme.DARK
+        )
     }
 }
