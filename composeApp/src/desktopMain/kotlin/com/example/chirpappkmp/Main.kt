@@ -42,5 +42,11 @@ fun main() {
                 )
             }
         }
+
+        ChirpTrayMenu(
+            state = applicationState.trayState,
+            themePreferenceFromAppSettings = applicationState.themePreferences,
+            onThemePreferenceClick = applicationStateHolder::onThemePreferenceClick
+        )
     }
 }
