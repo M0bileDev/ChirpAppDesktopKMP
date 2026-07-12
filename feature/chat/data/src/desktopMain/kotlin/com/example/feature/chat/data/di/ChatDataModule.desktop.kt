@@ -3,6 +3,7 @@ package com.example.feature.chat.data.di
 import com.example.feature.chat.data.lifecycle.AppLifecycleObserver
 import com.example.feature.chat.data.network.ConnectionErrorHandler
 import com.example.feature.chat.data.network.ConnectivityObserver
+import com.example.feature.chat.data.notification.DesktopNotifier
 import com.example.feature.chat.data.notification.FirebasePushNotificationService
 import com.example.feature.chat.database.ChirpDatabaseFactory
 import com.example.feature.chat.domain.notification.PushNotificationTokenService
@@ -17,4 +18,5 @@ actual val platformChatDataModule: Module = module {
     singleOf(::ConnectivityObserver)
     singleOf(::ConnectionErrorHandler)
     singleOf(::FirebasePushNotificationService) bind PushNotificationTokenService::class
+    singleOf(::DesktopNotifier)
 }
