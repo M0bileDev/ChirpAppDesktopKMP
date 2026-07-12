@@ -1,8 +1,10 @@
 package com.example.chirpappkmp
 
+import androidx.compose.ui.window.Notification
 import com.example.chirpappkmp.windows.WindowState
 import com.example.core.domain.preferences.ThemePreference
 import com.example.core.domain.preferences.ThemePreferences
+import com.example.feature.chat.data.notification.DesktopNotifier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,24 +17,20 @@ import kotlinx.coroutines.launch
 
 class ApplicationStateHolder(
     private val applicationScope: CoroutineScope,
-    private val themePreferences: ThemePreferences
+    private val themePreferences: ThemePreferences,
+    private val desktopNotifier: DesktopNotifier
 ) {
     private val _state = MutableStateFlow(ApplicationState())
     val state = _state
         .onStart {
             observeThemePreference()
+            observeNewMessages()
         }
         .stateIn(
             applicationScope,
             SharingStarted.Lazily,
             ApplicationState()
         )
-
-    fun onThemePreferenceClick(themePreference: ThemePreference) {
-        applicationScope.launch {
-            themePreferences.updateThemePreference(theme = themePreference)
-        }
-    }
 
     fun observeThemePreference() {
         themePreferences
@@ -47,6 +45,28 @@ class ApplicationStateHolder(
             .launchIn(
                 applicationScope
             )
+    }
+
+    fun observeNewMessages() {
+        desktopNotifier
+            .observeNewNotifications()
+            .onEach { desktopNotificationPayload ->
+                state.value.trayState
+                    .sendNotification(
+                        notification = Notification(
+                            title = desktopNotificationPayload.title,
+                            message = desktopNotificationPayload.message,
+                            type = Notification.Type.Info
+                        )
+                    )
+            }
+            .launchIn(applicationScope)
+    }
+
+    fun onThemePreferenceClick(themePreference: ThemePreference) {
+        applicationScope.launch {
+            themePreferences.updateThemePreference(theme = themePreference)
+        }
     }
 
     fun onAddWindowClick() {
