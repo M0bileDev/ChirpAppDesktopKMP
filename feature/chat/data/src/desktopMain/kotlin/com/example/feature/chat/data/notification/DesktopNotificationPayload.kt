@@ -1,6 +1,6 @@
 package com.example.feature.chat.data.notification
 
-data class DekstopNotificationPayload(
+data class DesktopNotificationPayload(
     val title: String,
     val message: String
 )
