@@ -64,4 +64,16 @@ class ApplicationStateHolder(
             )
         }
     }
+
+    fun onFocusChanged(id: String, isFocused: Boolean) {
+        _state.update {
+            it.copy(
+                windows = it.windows.map { currentWindow ->
+                    if (currentWindow.id == id) {
+                        currentWindow.copy(isFocused = isFocused)
+                    } else currentWindow
+                }
+            )
+        }
+    }
 }
