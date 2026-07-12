@@ -38,7 +38,12 @@ fun main() {
                         applicationStateHolder.onRemoveWindowClick(window.id)
                     },
                     onAddWindowClick = applicationStateHolder::onAddWindowClick,
-                    onFocusChanged = {}
+                    onFocusChanged = { isFocused ->
+                        applicationStateHolder.onFocusChanged(
+                            id = window.id,
+                            isFocused = isFocused
+                        )
+                    }
                 )
             }
         }
