@@ -51,14 +51,18 @@ class ApplicationStateHolder(
         desktopNotifier
             .observeNewNotifications()
             .onEach { desktopNotificationPayload ->
-                state.value.trayState
-                    .sendNotification(
-                        notification = Notification(
-                            title = desktopNotificationPayload.title,
-                            message = desktopNotificationPayload.message,
-                            type = Notification.Type.Info
+                val isAppInBackground = state.value.windows.none { it.isFocused }
+
+                if (isAppInBackground) {
+                    state.value.trayState
+                        .sendNotification(
+                            notification = Notification(
+                                title = desktopNotificationPayload.title,
+                                message = desktopNotificationPayload.message,
+                                type = Notification.Type.Info
+                            )
                         )
-                    )
+                }
             }
             .launchIn(applicationScope)
     }
