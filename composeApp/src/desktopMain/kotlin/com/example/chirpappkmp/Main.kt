@@ -5,18 +5,30 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.window.application
+import com.example.chirpappkmp.deeplink.DesktopDeeplinkHandler
 import com.example.chirpappkmp.di.desktopModule
 import com.example.chirpappkmp.di.initKoin
 import com.example.chirpappkmp.theme.rememberAppTheme
 import com.example.chirpappkmp.windows.ChirpWindow
 import org.koin.compose.koinInject
 
-fun main() {
+fun main(args: Array<String>) {
     initKoin {
         modules(
             desktopModule
         )
     }
+
+    DesktopDeeplinkHandler.setup()
+
+    val initialDeepLink = args.firstOrNull {
+        val cleanDeepLink = it.trim('"')
+
+        DesktopDeeplinkHandler.supportedUriPatterns.any { patter ->
+            patter.matches(cleanDeepLink)
+        }
+    }?.trim('"')
+
     application {
         val applicationStateHolder = koinInject<ApplicationStateHolder>()
         val applicationState by applicationStateHolder.state.collectAsState()
