@@ -21,6 +21,7 @@ fun main(args: Array<String>) {
 
     DesktopDeeplinkHandler.setup()
 
+    //App has been opened from deeplink
     val initialDeepLink = args.firstOrNull {
         val cleanDeepLink = it.trim('"')
 
