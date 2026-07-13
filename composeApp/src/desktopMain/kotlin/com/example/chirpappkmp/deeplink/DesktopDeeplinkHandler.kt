@@ -1,5 +1,6 @@
 package com.example.chirpappkmp.deeplink
 
+import com.example.chirpappkmp.navigation.ExternalUriHandler
 import java.awt.Desktop
 import javax.swing.SwingUtilities
 
@@ -32,7 +33,10 @@ object DesktopDeeplinkHandler {
     }
 
     fun processUri(uri: String) {
-        TODO("Not yet implemented")
+        val cleanUri = uri.trim('"',' ')
+        if(!isValidUri(uri)) return
+
+        ExternalUriHandler.onNewUri(cleanUri)
     }
 
     private fun isValidUri(uri: String): Boolean {
