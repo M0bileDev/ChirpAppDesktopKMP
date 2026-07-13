@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities
 
 object DesktopDeeplinkHandler {
     private var isInitialize = false
-    private val supportedUriPatterns = listOf(
+    val supportedUriPatterns = listOf(
         Regex("^chirp://.*"),
         Regex("^https?://chirp\\.pl-coding\\.com/.*"),
     )
@@ -19,6 +19,7 @@ object DesktopDeeplinkHandler {
             val desktop = Desktop.getDesktop()
             if (!desktop.isSupported(Desktop.Action.APP_OPEN_URI)) return
 
+            //support when process is ongoing (app works)
             desktop.setOpenURIHandler { event ->
                 val uri = event.uri.toString()
                 SwingUtilities.invokeLater {
