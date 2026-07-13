@@ -11,6 +11,7 @@ import androidx.compose.ui.window.application
 import com.example.chirpappkmp.deeplink.DesktopDeeplinkHandler
 import com.example.chirpappkmp.di.desktopModule
 import com.example.chirpappkmp.di.initKoin
+import com.example.chirpappkmp.navigation.ExternalUriHandler
 import com.example.chirpappkmp.theme.rememberAppTheme
 import com.example.chirpappkmp.windows.ChirpWindow
 import org.koin.compose.koinInject
@@ -38,6 +39,13 @@ fun main(args: Array<String>) {
         val applicationStateHolder = koinInject<ApplicationStateHolder>()
         val applicationState by applicationStateHolder.state.collectAsState()
         val windows = applicationState.windows
+
+        //App has been opened from deeplink
+        LaunchedEffect(canReceiveDeepLink) {
+            if (canReceiveDeepLink && initialDeepLink != null) {
+                ExternalUriHandler.onNewUri(initialDeepLink)
+            }
+        }
 
         LaunchedEffect(windows) {
             if (windows.isEmpty()) {
