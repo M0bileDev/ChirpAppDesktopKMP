@@ -5,6 +5,10 @@ import javax.swing.SwingUtilities
 
 object DesktopDeeplinkHandler {
     private var isInitialize = false
+    private val supportedUriPatterns = listOf(
+        Regex("^chirp://.*"),
+        Regex("^https?://chirp\\.pl-coding\\.com/.*"),
+    )
 
     fun setup() {
         if (!Desktop.isDesktopSupported()) return
