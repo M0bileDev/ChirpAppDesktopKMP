@@ -34,4 +34,8 @@ object DesktopDeeplinkHandler {
     fun processUri(uri: String) {
         TODO("Not yet implemented")
     }
+
+    private fun isValidUri(uri: String): Boolean {
+        return supportedUriPatterns.any { it.matches(uri) }
+    }
 }
