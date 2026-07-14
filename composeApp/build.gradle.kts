@@ -2,7 +2,11 @@ plugins {
     alias(libs.plugins.convention.cmp.application)
     alias(libs.plugins.compose.hot.reload)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.conveyor)
 }
+
+//conveyor requires it for generate right jar files for specific application version
+version = "1.0.0"
 
 kotlin {
     sourceSets {
@@ -39,7 +43,7 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.compose)
         }
 
-        desktopMain.dependencies{
+        desktopMain.dependencies {
             implementation(projects.core.presentation)
             implementation(compose.desktop.currentOs)
             // swing -> ui framework build on awt (Abstract Window Toolkit)
@@ -48,13 +52,25 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.jsystemthemedetector)
+
+            //desktop specific targets and cpu architecture
+            implementation(compose.desktop.linux_x64)
+            implementation(compose.desktop.linux_arm64)
+            implementation(compose.desktop.macos_x64)
+            implementation(compose.desktop.macos_arm64)
+            implementation(compose.desktop.windows_x64)
+            implementation(compose.desktop.windows_arm64)
         }
     }
 }
 
 // Desktop entry point configuration -> main function
 compose.desktop {
-    application{
+    application {
         mainClass = "com.example.chirpappkmp.MainKt"
+
+        nativeDistributions {
+            packageName = "com.example.chirpappkmp"
+        }
     }
 }
