@@ -5,6 +5,7 @@ composeBom = "2025.07.00"
 kotlin = "2.2.21"
 ksp = "2.2.21-2.0.5"
 google-services = "4.4.3"
+conveyor = "1.12"
 
 androidDesugarJdkLibs = "2.1.5"
 androidTools = "31.12.0"
@@ -210,6 +211,7 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
+conveyor = { id = "dev.hydraulic.conveyor", version.ref = "conveyor" }
 
 [bundles]
 koin-common = [
