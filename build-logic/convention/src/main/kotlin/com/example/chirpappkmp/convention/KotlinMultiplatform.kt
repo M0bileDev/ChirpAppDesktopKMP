@@ -1,23 +1,24 @@
 package com.example.chirpappkmp.convention
 
-import com.android.build.gradle.LibraryExtension
+import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryExtension
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
-internal fun Project.configureKotlinMultiplatform(){
-
-    //android library extension
-    extensions.configure<LibraryExtension>{
-        namespace = this@configureKotlinMultiplatform.pathToPackageName()
-    }
-
+internal fun Project.configureKotlinMultiplatform() {
     //library and application module
-    configureAndroidTarget()
+    configureAndroidLibraryTarget()
     // enable desktopMain target for other modules
     configureDesktopTarget()
 
-    extensions.configure<KotlinMultiplatformExtension>{
+    extensions.configure<KotlinMultiplatformExtension> {
+        extensions.configure<KotlinMultiplatformAndroidLibraryExtension> {
+            compileSdk = 36
+            minSdk = 26
+            namespace = pathToPackageName()
+            experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
+        }
+
         listOf(
             iosArm64(),
             iosSimulatorArm64()
