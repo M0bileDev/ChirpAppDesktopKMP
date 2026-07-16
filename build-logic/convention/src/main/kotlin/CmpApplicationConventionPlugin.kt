@@ -1,5 +1,5 @@
 import com.example.chirpappkmp.convention.applyHierarchyTemplate
-import com.example.chirpappkmp.convention.configureAndroidTarget
+import com.example.chirpappkmp.convention.configureAndroidLibraryTarget
 import com.example.chirpappkmp.convention.configureDesktopTarget
 import com.example.chirpappkmp.convention.configureIosTargets
 import com.example.chirpappkmp.convention.libs
@@ -13,7 +13,7 @@ class CmpApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
-                apply("com.example.chirpappkmp.convention.android.application.compose")
+                apply("com.android.kotlin.multiplatform.library")
                 //kmp
                 apply("org.jetbrains.kotlin.multiplatform")
                 //compose library references
@@ -23,7 +23,7 @@ class CmpApplicationConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.plugin.serialization")
             }
 
-            configureAndroidTarget()
+            configureAndroidLibraryTarget()
             configureIosTargets()
             configureDesktopTarget()
 
@@ -32,7 +32,7 @@ class CmpApplicationConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                "debugImplementation"(libs.findLibrary("androidx-compose-ui-tooling").get())
+                "androidMainImplementation"(libs.findLibrary("androidx-compose-ui-tooling").get())
             }
         }
     }
