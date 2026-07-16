@@ -1,6 +1,6 @@
 package com.example.chirpappkmp.convention
 
-import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
@@ -10,11 +10,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 //Configure Kotlin language for the Android side
 internal fun Project.configureKotlinAndroid(
-    //for KMP it has to be as CommonExtension, common parts of the Android specific
+    //for KMP it has to be as ApplicationExtension, common parts of the Android specific
     // config for both Android and KMP modules
-    commonExtension: CommonExtension<*, *, *, *, *, *>
+    applicationExtension: ApplicationExtension
 ) {
-    with(commonExtension) {
+    with(applicationExtension) {
         compileSdk = libs.findVersion("projectCompileSdkVersion").get().toString().toInt()
         //for both library module and application module
         defaultConfig.minSdk = libs.findVersion("projectMinSdkVersion").get().toString().toInt()
