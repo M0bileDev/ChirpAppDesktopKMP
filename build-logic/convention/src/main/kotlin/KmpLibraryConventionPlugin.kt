@@ -17,22 +17,10 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("org.jetbrains.kotlin.multiplatform")
                 apply("org.jetbrains.kotlin.plugin.serialization")
-                apply("com.android.library")
+                apply("com.android.kotlin.multiplatform.library")
             }
 
             configureKotlinMultiplatform()
-
-            //android specific target of a kmp library
-            extensions.configure<LibraryExtension> {
-                configureKotlinAndroid(this)
-
-                //resource prefix -> kmp supports different resources and android kmp as well
-                //and generated android resource prefix should be related to module name
-                resourcePrefix = this@with.pathToResourcePrefix()
-
-                //enable android resources, require to make debug build that run on ios simulator
-                experimentalProperties["android.experimental.kmp.enableAndroidResources"] = "true"
-            }
 
             //special for kmp module, common part for kmp module
             dependencies {
