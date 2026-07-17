@@ -24,13 +24,19 @@ kotlin {
             }
         }
 
-        desktopMain{
-            dependencies{
+        val jvmCommonMain by creating {
+            dependsOn(commonMain.get())
+        }
+
+        desktopMain {
+            dependsOn(jvmCommonMain)
+            dependencies {
                 implementation(libs.ktor.client.okhttp)
             }
         }
 
         androidMain {
+            dependsOn(jvmCommonMain)
             dependencies {
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.koin.android)
