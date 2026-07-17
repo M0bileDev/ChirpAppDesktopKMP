@@ -30,12 +30,6 @@ private val hierarchyTemplate = KotlinHierarchyTemplate {
             }
         }
 
-        // group to share jvm/kotlin common code
-        group("jvmCommon") {
-            withAndroidTarget()
-            withJvm()
-        }
-
         // which source-set, belongs to this group, this group covers all native platforms
         group("native") {
             withNative()
