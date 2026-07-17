@@ -20,12 +20,18 @@ kotlin {
             }
         }
 
-        // custom source set for mobile only - notification moko library provide
-        // implementation only for Android and iOS
-        mobileMain.dependencies {
-            implementation(libs.moko.permissions)
-            implementation(libs.moko.permissions.compose)
-            implementation(libs.moko.permissions.notifications)
+        val mobileMain by getting {
+            // custom source set for mobile only - notification moko library provide
+            // implementation only for Android and iOS
+            dependencies {
+                implementation(libs.moko.permissions)
+                implementation(libs.moko.permissions.compose)
+                implementation(libs.moko.permissions.notifications)
+            }
+        }
+
+        androidMain {
+            dependsOn(mobileMain)
         }
     }
 }
