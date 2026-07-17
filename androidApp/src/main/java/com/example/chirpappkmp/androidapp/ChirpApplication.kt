@@ -1,4 +1,4 @@
-package com.example.chirpappkmp
+package com.example.chirpappkmp.androidapp
 
 import android.app.Application
 import com.example.chirpappkmp.di.initKoin

@@ -1,4 +1,4 @@
-package com.example.chirpappkmp
+package com.example.chirpappkmp.androidapp
 
 import android.content.Intent
 import android.os.Bundle
