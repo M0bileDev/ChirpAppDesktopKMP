@@ -27,6 +27,7 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        maven(url = "https://jitpack.io")
     }
 }
 
@@ -45,3 +46,4 @@ include(":feature:chat:presentation")
 include(":feature:chat:domain")
 include(":feature:chat:data")
 include(":feature:chat:database")
+include(":androidApp")

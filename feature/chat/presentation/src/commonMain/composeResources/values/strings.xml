@@ -57,4 +57,6 @@
     <string name="password_change_successful">You've successfully changed your password.</string>
     <string name="error_invalid_file_type">Selected image type is not supported.</string>
     <string name="only_you">Only you</string>
+    <string name="select_a_profile_image">Select a profile image</string>
+    <string name="drop_a_profile_image">Drop a profile image</string>
 </resources>

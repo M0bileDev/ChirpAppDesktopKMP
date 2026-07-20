@@ -3,6 +3,7 @@
 package com.example.feature.chat.presentation.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -23,6 +24,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -57,8 +61,10 @@ import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.core.presentation.util.UiText
 import com.example.core.presentation.util.clearFocusOnTap
+import com.example.feature.chat.presentation.profile.components.DragAndDropOverlay
 import com.example.feature.chat.presentation.profile.components.ProfileHeaderSection
 import com.example.feature.chat.presentation.profile.components.ProfileSectionLayout
+import com.example.feature.chat.presentation.profile.mediapicker.rememberDragAndDropTarget
 import com.example.feature.chat.presentation.profile.mediapicker.rememberImagePicker
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -103,6 +109,20 @@ fun ProfileScreen(
     state: ProfileState,
     onAction: (ProfileAction) -> Unit
 ) = with(state) {
+    var isHoveringFile by remember { mutableStateOf(false) }
+    val dragAndDropTarget = rememberDragAndDropTarget(
+        onHover = { isHovering ->
+            isHoveringFile = isHovering
+        },
+        onDrop = { imageData ->
+            onAction(
+                ProfileAction.OnPictureSelected(
+                    bytes = imageData.bytes,
+                    mimeType = imageData.mimeType
+                )
+            )
+        }
+    )
 
     Column(
         modifier = Modifier
@@ -113,6 +133,10 @@ fun ProfileScreen(
                 shape = RoundedCornerShape(16.dp)
             )
             .verticalScroll(rememberScrollState())
+            .dragAndDropTarget(
+                shouldStartDragAndDrop = { true },
+                target = dragAndDropTarget
+            )
     ) {
         ProfileHeaderSection(
             modifier = Modifier
@@ -249,6 +273,10 @@ fun ProfileScreen(
                 )
             }
         }
+    }
+
+    if (isHoveringFile) {
+        DragAndDropOverlay()
     }
 
     if (showDeleteImageConfirmationDialog) {

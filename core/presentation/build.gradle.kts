@@ -16,34 +16,22 @@ kotlin {
                 implementation(compose.components.resources)
                 implementation(libs.material3.adaptive)
                 implementation(libs.bundles.koin.common)
+                implementation(libs.jetbrains.lifecycle.compose)
             }
         }
 
-        // custom source set for mobile only - notification moko library provide
-        // implementation only for Android and iOS
-        val mobileMain by creating {
+        val mobileMain by getting {
+            // custom source set for mobile only - notification moko library provide
+            // implementation only for Android and iOS
             dependencies {
                 implementation(libs.moko.permissions)
                 implementation(libs.moko.permissions.compose)
                 implementation(libs.moko.permissions.notifications)
             }
-            // provide dependencies from commonMain
-            dependsOn(commonMain.get())
         }
-        androidMain.get().dependsOn(mobileMain)
 
-        // recreate iosMain because iosMain.get().dependsOn(mobileMain) makes SourceSet issues
-        val iosMain by creating {
+        androidMain {
             dependsOn(mobileMain)
         }
-        listOf(
-            iosArm64(),
-            iosSimulatorArm64()
-        ).forEach { target ->
-            getByName("${target.name}Main") {
-                dependsOn(iosMain)
-            }
-        }
     }
-
 }

@@ -1,9 +1,9 @@
 package com.example.feature.chat.data.network
 
 import com.example.feature.chat.domain.model.ConnectionState
+import io.ktor.client.engine.darwin.DarwinHttpRequestException
 import kotlinx.coroutines.CancellationException
 import platform.Foundation.NSError
-import platform.Foundation.NSURLErrorDomain
 import platform.Foundation.NSURLErrorNetworkConnectionLost
 import platform.Foundation.NSURLErrorNotConnectedToInternet
 import platform.Foundation.NSURLErrorTimedOut
@@ -12,34 +12,21 @@ actual class ConnectionErrorHandler {
     actual fun getConnectionStateFromError(cause: Throwable): ConnectionState {
         val nsError = cause.extractNsError()
 
-        return if (nsError != null) {
-            when (nsError.code) {
-                NSURLErrorNotConnectedToInternet,
-                NSURLErrorNetworkConnectionLost,
-                NSURLErrorTimedOut -> ConnectionState.ERROR_NETWORK
-
-                else -> ConnectionState.ERROR_UNKNOWN
-            }
-        } else if (cause is IOSNetworkCancellationException) {
-            ConnectionState.ERROR_NETWORK
-        } else {
-            ConnectionState.ERROR_UNKNOWN
+        return when {
+            nsError != null && nsError.code.isNetworkError -> ConnectionState.ERROR_NETWORK
+            nsError != null -> ConnectionState.ERROR_UNKNOWN
+            cause.findInCauseChain<IOSNetworkCancellationException>() != null -> ConnectionState.ERROR_NETWORK
+            else -> ConnectionState.ERROR_UNKNOWN
         }
     }
 
     actual fun transformException(exception: Throwable): Throwable {
         if (exception is CancellationException) {
-            val cause = exception.cause ?: return exception
-            val isDarwinException = cause.message?.contains("DarwinHttpRequestException") == true
-            val isConnectionLostException =
-                cause.message?.contains("NSURLErrorDomain Code=-1005") == true
-            val isNotConnectedException =
-                cause.message?.contains("NSURLErrorDomain Code=-1009") == true
-
-            if (isDarwinException || isConnectionLostException || isNotConnectedException) {
+            val nsError = exception.extractNsError()
+            if (nsError != null && nsError.code.isNetworkError) {
                 return IOSNetworkCancellationException(
                     message = "Network connection lost (extracted from cancellation)",
-                    cause = cause
+                    cause = exception
                 )
             }
         }
@@ -48,65 +35,27 @@ actual class ConnectionErrorHandler {
     }
 
     actual fun isRetriableError(cause: Throwable): Boolean {
-        if (cause is IOSNetworkCancellationException) {
+        if (cause.findInCauseChain<IOSNetworkCancellationException>() != null) {
             return true
         }
 
-        return when (cause.extractNsError()?.code) {
-            NSURLErrorNotConnectedToInternet,
-            NSURLErrorNetworkConnectionLost,
-            NSURLErrorTimedOut -> true
-
-            else -> false
-        }
+        return cause.extractNsError()?.code?.isNetworkError == true
     }
 
-    private fun Throwable.extractNsError(): NSError? {
-        val throwableCause = cause
+    private fun Throwable.extractNsError(): NSError? =
+        findInCauseChain<DarwinHttpRequestException>()?.origin
 
-        if (throwableCause is NSError) {
-            return throwableCause
+    private inline fun <reified T : Throwable> Throwable.findInCauseChain(): T? {
+        var current: Throwable? = this
+        while (current != null) {
+            if (current is T) return current
+            current = current.cause
         }
-
-        if (this is NSError) {
-            return this
-        }
-
-        val exceptionNSError = this.toNSError()
-        val causeNSError = this.cause?.toNSError()
-
-        return exceptionNSError ?: causeNSError
+        return null
     }
 
-    private fun Throwable.toNSError(): NSError? =
-        message?.let { message ->
-            when {
-                message.contains(NSURLErrorNotConnectedToInternetPattern) -> {
-                    return NSError.errorWithDomain(
-                        domain = NSURLErrorDomain,
-                        code = NSURLErrorNotConnectedToInternet,
-                        userInfo = null
-                    )
-                }
-
-                message.contains(NSURLErrorNotConnectionLostPattern) -> {
-                    return NSError.errorWithDomain(
-                        domain = NSURLErrorDomain,
-                        code = NSURLErrorNetworkConnectionLost,
-                        userInfo = null
-                    )
-                }
-
-                else -> null
-            }
-        }
-
-
-    companion object {
-        private val NSURLErrorNotConnectedToInternetPattern =
-            "Error Domain=${NSURLErrorDomain} Code=${NSURLErrorNotConnectedToInternet}"
-
-        private val NSURLErrorNotConnectionLostPattern =
-            "Error Domain=${NSURLErrorDomain} Code=${NSURLErrorNetworkConnectionLost}"
-    }
+    private val Long.isNetworkError: Boolean
+        get() = this == NSURLErrorNotConnectedToInternet ||
+            this == NSURLErrorNetworkConnectionLost ||
+            this == NSURLErrorTimedOut
 }
